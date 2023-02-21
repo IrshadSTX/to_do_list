@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:to_do_list/core/constants.dart';
+import 'package:to_do_list/model/data_model.dart';
 import 'package:to_do_list/model/db/db_functions.dart';
 import 'package:to_do_list/view/add_task_screen.dart';
 import 'package:to_do_list/view/widgets/task_tiles.dart';
@@ -10,7 +13,10 @@ class ToDoScreen extends StatefulWidget {
   State<ToDoScreen> createState() => _ToDoScreenState();
 }
 
+enum DataFilter { ALL, COMPLETED, PROGRESS }
+
 class _ToDoScreenState extends State<ToDoScreen> {
+  DataFilter filter = DataFilter.ALL;
   @override
   void initState() {
     super.initState();
@@ -43,19 +49,32 @@ class _ToDoScreenState extends State<ToDoScreen> {
                   top: 50, bottom: 30, left: 30, right: 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.list,
-                        size: 30,
-                        color: Colors.lightBlueAccent,
-                      )),
-                  SizedBox(
-                    height: 10,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.white,
+                          child: IconButton(
+                              onPressed: () async {
+                                final todoDB =
+                                    await Hive.openBox<ToDoModel>('todo_db');
+                                await todoDB.clear();
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const ToDoScreen(),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.restart_alt,
+                                color: Colors.black,
+                              ))),
+                    ],
                   ),
-                  Text(
+                  kHeight10,
+                  const Text(
                     'TodoList',
                     style: TextStyle(
                       color: Colors.white,
@@ -63,7 +82,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
+                  const Text(
                     '12 Tasks',
                     style: TextStyle(
                       color: Colors.white,

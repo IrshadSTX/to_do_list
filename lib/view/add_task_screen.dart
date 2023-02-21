@@ -116,9 +116,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     }
 
     final todo = ToDoModel(
-      todoName: todoName,
-      todoSubName: todoSubName,
-    );
+        todoName: todoName, todoSubName: todoSubName, complete: false);
     print('adding place');
     addToDo(todo);
   }

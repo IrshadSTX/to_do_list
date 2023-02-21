@@ -19,6 +19,7 @@ class ToDoModelAdapter extends TypeAdapter<ToDoModel> {
     return ToDoModel(
       todoName: fields[1] as String,
       todoSubName: fields[2] as String,
+      complete: fields[3] as bool,
       id: fields[0] as int?,
     );
   }
@@ -26,13 +27,15 @@ class ToDoModelAdapter extends TypeAdapter<ToDoModel> {
   @override
   void write(BinaryWriter writer, ToDoModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.todoName)
       ..writeByte(2)
-      ..write(obj.todoSubName);
+      ..write(obj.todoSubName)
+      ..writeByte(3)
+      ..write(obj.complete);
   }
 
   @override

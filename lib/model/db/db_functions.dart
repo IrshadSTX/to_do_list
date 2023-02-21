@@ -25,3 +25,9 @@ Future<void> deleteToDo(index) async {
   await todoDB.deleteAt(index);
   getAllToDo();
 }
+
+Future<void> markCompleted(int id, ToDoModel value) async {
+  final todoDB = await Hive.openBox<ToDoModel>('todo_db');
+  todoDB.putAt(id, value);
+  getAllToDo();
+}

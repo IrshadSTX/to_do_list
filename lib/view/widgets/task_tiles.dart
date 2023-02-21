@@ -14,14 +14,68 @@ class ListTasksWidget extends StatelessWidget {
             itemBuilder: (ctx, index) {
               final data = toDoList[index];
               return ListTile(
+                leading: Text(
+                  '${index + 1}',
+                  style: const TextStyle(fontSize: 20),
+                ),
                 title: Text(data.todoName),
                 subtitle: Text(data.todoSubName),
-                trailing: IconButton(
-                  onPressed: () {
-                    deleteToDo(index);
-                  },
-                  icon: const Icon(Icons.delete),
-                ),
+                trailing: data.complete
+                    ? Icon(
+                        Icons.done,
+                        color: Colors.green,
+                        size: 30,
+                      )
+                    : Icon(
+                        Icons.pending_actions_outlined,
+                        color: Colors.blueAccent,
+                        size: 30,
+                      ),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      actions: [
+                        Row(
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(ctx).pop();
+                              },
+                              child: Container(
+                                color: Colors.red,
+                                padding: const EdgeInsets.all(15),
+                                child: const Text(
+                                  "exit",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            TextButton(
+                              onPressed: () {
+                                ToDoModel markedTodo = ToDoModel(
+                                  todoName: data.todoName,
+                                  todoSubName: data.todoSubName,
+                                  complete: true,
+                                );
+                                markCompleted(index, markedTodo);
+                              },
+                              child: Container(
+                                color: Colors.green,
+                                padding: const EdgeInsets.all(15),
+                                child: const Text(
+                                  "Mark as completed",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
               );
             },
             separatorBuilder: (ctx, index) => const Divider(),

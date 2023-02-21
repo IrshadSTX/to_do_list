@@ -9,9 +9,12 @@ class ToDoModel {
   final String todoName;
   @HiveField(2)
   final String todoSubName;
+  @HiveField(3)
+  final bool complete;
   ToDoModel({
     required this.todoName,
     required this.todoSubName,
+    required this.complete,
     this.id,
   });
 }
