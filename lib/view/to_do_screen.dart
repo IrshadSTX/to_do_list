@@ -1,25 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_list/core/constants.dart';
-import 'package:to_do_list/model/data_model.dart';
 import 'package:to_do_list/model/db/db_functions.dart';
 import 'package:to_do_list/view/add_task_screen.dart';
 import 'package:to_do_list/view/widgets/task_tiles.dart';
 
-class ToDoScreen extends StatefulWidget {
+class ToDoScreen extends StatelessWidget {
   const ToDoScreen({super.key});
 
   @override
-  State<ToDoScreen> createState() => _ToDoScreenState();
-}
-
-class _ToDoScreenState extends State<ToDoScreen> {
-  @override
-  void initState() {
-    super.initState();
-    getAllToDo();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,18 +76,10 @@ class _ToDoScreenState extends State<ToDoScreen> {
                                             'Approve',
                                             style: TextStyle(color: Colors.red),
                                           ),
-                                          onPressed: () async {
-                                            final todoDB =
-                                                await Hive.openBox<ToDoModel>(
-                                                    'todo_db');
-                                            await todoDB.clear();
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const ToDoScreen(),
-                                              ),
-                                            );
+                                          onPressed: () {
+                                            Provider.of<FunctionDB>(context,
+                                                    listen: false)
+                                                .resetDB();
                                             Navigator.of(context).pop();
                                           },
                                         ),
@@ -122,13 +103,17 @@ class _ToDoScreenState extends State<ToDoScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Text(
-                    '12 Tasks',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
+                  Consumer<FunctionDB>(builder: (context, value, child) {
+                    return Text(
+                      value.toDoList.isEmpty
+                          ? 'Empty Task'
+                          : 'Tasks ${value.toDoList.length} ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),

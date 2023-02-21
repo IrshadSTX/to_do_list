@@ -3,17 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:to_do_list/model/data_model.dart';
 import 'package:to_do_list/model/db/db_functions.dart';
 
-class AddTaskScreen extends StatefulWidget {
+class AddTaskScreen extends StatelessWidget {
   const AddTaskScreen({super.key});
 
-  @override
-  State<AddTaskScreen> createState() => _AddTaskScreenState();
-}
-
-class _AddTaskScreenState extends State<AddTaskScreen> {
-  final _todoNameController = TextEditingController();
-  final _todoSubNameController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,69 +22,72 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      'Add Task',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.lightBlueAccent),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      controller: _todoNameController,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        hintText: 'Title text',
-                        labelText: 'Title',
+              child: Consumer<FunctionDB>(builder: (context, value, _) {
+                return Form(
+                  key: value.formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text(
+                        'Add Task',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.lightBlueAccent),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Fill the text field';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    TextFormField(
-                      controller: _todoSubNameController,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        hintText: 'Description',
-                        labelText: 'Sub Text',
+                      const SizedBox(
+                        height: 10,
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Fill the text field';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            onAddToDoNameClicked();
-                            Navigator.of(context).pop();
+                      TextFormField(
+                        controller: value.todoNameController,
+                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          hintText: 'Title text',
+                          labelText: 'Title',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Fill the text field';
+                          } else {
+                            return null;
                           }
                         },
-                        child: const Text(
-                          'Add',
-                          style: TextStyle(color: Colors.white),
-                        ))
-                  ],
-                ),
-              ),
+                      ),
+                      TextFormField(
+                        controller: value.todoSubNameController,
+                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          hintText: 'Description',
+                          labelText: 'Sub Text',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Fill the text field';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            if (value.formKey.currentState!.validate()) {
+                              onAddToDoNameClicked(
+                                  context: context, value: value);
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          child: const Text(
+                            'Add',
+                            style: TextStyle(color: Colors.white),
+                          ))
+                    ],
+                  ),
+                );
+              }),
             ),
           ),
         ),
@@ -100,9 +95,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  Future<void> onAddToDoNameClicked() async {
-    final todoName = _todoNameController.text.trim();
-    final todoSubName = _todoSubNameController.text.trim();
+  Future<void> onAddToDoNameClicked({context, value}) async {
+    final todoName = value.todoNameController.text.trim();
+    final todoSubName = value.todoSubNameController.text.trim();
 
     if (todoName.isEmpty || todoSubName.isEmpty) {
       return;

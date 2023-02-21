@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_list/model/data_model.dart';
 import 'package:to_do_list/model/db/db_functions.dart';
 
@@ -7,12 +8,12 @@ class ListTasksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: todoListNotifier,
-      builder: (BuildContext ctx, List<ToDoModel> toDoList, Widget? child) {
+    return Consumer<FunctionDB>(
+      builder: (context, value, child) {
+        value.getAllToDo();
         return ListView.separated(
             itemBuilder: (ctx, index) {
-              final data = toDoList[index];
+              final data = value.toDoList[index];
               return ListTile(
                 leading: Text(
                   '${index + 1}',
@@ -37,7 +38,7 @@ class ListTasksWidget extends StatelessWidget {
                               ),
                         IconButton(
                             onPressed: () async {
-                              await deleteAlertBox(context, index);
+                              await deleteAlertBox(context, index, value);
                             },
                             icon: const Icon(Icons.delete,
                                 color: Colors.red, size: 20))
@@ -73,7 +74,7 @@ class ListTasksWidget extends StatelessWidget {
                                         todoSubName: data.todoSubName,
                                         complete: true,
                                       );
-                                      markCompleted(index, markedTodo);
+                                      value.markCompleted(index, markedTodo);
                                       Navigator.of(ctx).pop();
                                     },
                                     child: Container(
@@ -94,12 +95,12 @@ class ListTasksWidget extends StatelessWidget {
               );
             },
             separatorBuilder: (ctx, index) => const Divider(),
-            itemCount: toDoList.length);
+            itemCount: value.toDoList.length);
       },
     );
   }
 
-  Future<void> deleteAlertBox(BuildContext context, int index) {
+  Future<void> deleteAlertBox(BuildContext context, int index, value) {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -128,7 +129,7 @@ class ListTasksWidget extends StatelessWidget {
                 'Approve',
               ),
               onPressed: () {
-                deleteToDo(index);
+                value.deleteToDo(index);
                 Navigator.of(context).pop();
               },
             ),
