@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_list/model/data_model.dart';
+import 'package:to_do_list/model/db/db_functions.dart';
 import 'package:to_do_list/view/to_do_screen.dart';
 
 Future<void> main() async {
@@ -18,11 +20,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const ToDoScreen(),
-      theme: ThemeData(
-        primarySwatch: Colors.amber,
+    return ChangeNotifierProvider(
+      create: (context) => FunctionDB(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const ToDoScreen(),
+        theme: ThemeData(
+          primarySwatch: Colors.amber,
+        ),
       ),
     );
   }

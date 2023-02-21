@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_list/model/data_model.dart';
 import 'package:to_do_list/model/db/db_functions.dart';
 
@@ -118,6 +119,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     final todo = ToDoModel(
         todoName: todoName, todoSubName: todoSubName, complete: false);
     print('adding place');
-    addToDo(todo);
+    Provider.of<FunctionDB>(context, listen: false).addToDo(todo);
   }
 }
