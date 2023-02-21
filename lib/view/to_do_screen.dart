@@ -13,10 +13,7 @@ class ToDoScreen extends StatefulWidget {
   State<ToDoScreen> createState() => _ToDoScreenState();
 }
 
-enum DataFilter { ALL, COMPLETED, PROGRESS }
-
 class _ToDoScreenState extends State<ToDoScreen> {
-  DataFilter filter = DataFilter.ALL;
   @override
   void initState() {
     super.initState();
@@ -58,13 +55,56 @@ class _ToDoScreenState extends State<ToDoScreen> {
                           backgroundColor: Colors.white,
                           child: IconButton(
                               onPressed: () async {
-                                final todoDB =
-                                    await Hive.openBox<ToDoModel>('todo_db');
-                                await todoDB.clear();
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => const ToDoScreen(),
-                                  ),
+                                showDialog<void>(
+                                  context: context,
+                                  barrierDismissible:
+                                      false, // user must tap button!
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                        'Reset entire datas',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: const <Widget>[
+                                            Text(
+                                                'Do you want to reset this task screen'),
+                                            Text(
+                                                'The Tasks no longer available'),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Decline'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: const Text(
+                                            'Approve',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                          onPressed: () async {
+                                            final todoDB =
+                                                await Hive.openBox<ToDoModel>(
+                                                    'todo_db');
+                                            await todoDB.clear();
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const ToDoScreen(),
+                                              ),
+                                            );
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
                               },
                               icon: const Icon(

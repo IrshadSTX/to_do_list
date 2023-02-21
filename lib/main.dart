@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const ToDoScreen(),
-      theme: ThemeData(primarySwatch: Colors.amber),
+      theme: ThemeData(
+        primarySwatch: Colors.amber,
+      ),
     );
   }
 }
