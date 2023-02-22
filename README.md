@@ -1,10 +1,10 @@
 # to_do_list
 
-A new Flutter project.
+This a Flutter based simple to do list app for beginners who are seeking to study hive and provider state managment,
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+#flutter,Hive,Provider
 
 A few resources to get you started if this is your first Flutter project:
 
