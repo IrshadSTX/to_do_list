@@ -113,7 +113,7 @@ class AddTaskScreen extends StatelessWidget {
 
     final todo = ToDoModel(
         todoName: todoName, todoSubName: todoSubName, complete: false);
-    print('adding place');
+
     Provider.of<FunctionDB>(context, listen: false).addToDo(todo);
   }
 }

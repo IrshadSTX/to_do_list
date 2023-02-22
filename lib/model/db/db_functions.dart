@@ -15,7 +15,6 @@ class FunctionDB with ChangeNotifier {
     toDoList.add(value);
     todoNameController.clear();
     todoSubNameController.clear();
-    print('listening1');
     notifyListeners();
     getAllToDo();
   }

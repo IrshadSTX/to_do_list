@@ -106,11 +106,11 @@ class ToDoScreen extends StatelessWidget {
                   Consumer<FunctionDB>(builder: (context, value, child) {
                     return Text(
                       value.toDoList.isEmpty
-                          ? 'Empty Task'
-                          : 'Tasks ${value.toDoList.length} ',
-                      style: TextStyle(
+                          ? 'Add Tasks'
+                          : 'No of Tasks :  ${value.toDoList.length} ',
+                      style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 16,
                       ),
                     );
                   }),
